@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>BYSO · growth starts with one message</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts: Inter + Space Grotesk for premium feel -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-theme">
+  <!-- theme toggle button (fixed) -->
+  <button class="theme-toggle" id="themeToggle" aria-label="switch theme">
+    <i class="fas fa-sun"></i>
+    <i class="fas fa-moon"></i>
+  </button>
+
+  <!-- hamburger menu (left) -->
+  <div class="hamburger-menu" id="hamburgerBtn">
+    <i class="fas fa-bars"></i>
+  </div>
+  <nav class="side-menu" id="sideMenu">
+    <div class="menu-header">
+      <!-- logo inside menu as requested -->
+      <div class="menu-logo">
+        <div class="logo-3d">BYSO</div>
+        <p class="logo-tagline">growth starts here</p>
+      </div>
+      <button class="close-menu" id="closeMenu"><i class="fas fa-times"></i></button>
+    </div>
+    <ul class="menu-items">
+      <li><a href="#home" class="menu-link"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="#services" class="menu-link"><i class="fas fa-rocket"></i> Services</a></li>
+      <li><a href="#" id="termsLink" class="menu-link"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+      <li><a href="#" id="historyLink" class="menu-link"><i class="fas fa-clock"></i> Order History</a></li>
+    </ul>
+    <div class="menu-footer">
+      <p>✨ premium digital suite</p>
+    </div>
+  </nav>
+  <!-- backdrop blur when menu open -->
+  <div class="menu-backdrop" id="menuBackdrop"></div>
+
+  <main>
+    <!-- HERO SECTION (home) -->
+    <section id="home" class="hero">
+      <div class="floating-shapes">
+        <div class="shape"></div><div class="shape"></div><div class="shape"></div>
+      </div>
+      <div class="hero-content">
+        <h1 class="hero-title">BYSO</h1>
+        <p class="hero-tagline">Growth Starts With One Message</p>
+        <p class="hero-description">Order powerful digital services instantly through WhatsApp in just a few clicks.</p>
+        <a href="#services" class="btn-glow explore-btn">Explore Services <i class="fas fa-arrow-right"></i></a>
+        <div class="stats-row">
+          <div class="stat-item"><span class="stat-num">10K+</span> Orders Completed</div>
+          <div class="stat-item"><span class="stat-num">5K+</span> Happy Clients</div>
+          <div class="stat-item"><span class="stat-num">50+</span> Services Available</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES SECTION (dynamic categories) -->
+    <section id="services" class="services">
+      <div class="section-header">
+        <h2>Luxury services <i class="fas fa-sparkles"></i></h2>
+        <p>choose category & place order</p>
+      </div>
+      <div id="categoriesContainer" class="categories-container"></div>
+    </section>
+
+    <!-- ORDER MODAL (steps) -->
+    <div class="modal-overlay" id="orderModal">
+      <div class="modal-card">
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+        <div class="modal-header">
+          <i class="fas fa-shopping-cart"></i>
+          <h3 id="modalServiceName">Service name</h3>
+        </div>
+        <div class="modal-body">
+          <!-- step content injected via js -->
+          <div id="stepContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY MODAL -->
+    <div class="modal-overlay" id="historyModal">
+      <div class="modal-card large">
+        <button class="modal-close" id="closeHistory"><i class="fas fa-times"></i></button>
+        <h3><i class="fas fa-history"></i> Order history</h3>
+        <div id="historyList" class="history-list"></div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="#">About</a>
+        <a href="terms.html">Terms</a>
+        <a href="#">Contact</a>
+        <a href="https://wa.me/6282298431688" target="_blank">WhatsApp</a>
+      </div>
+      <p class="footer-copy">© BYSO — growth starts with one message</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <!-- script handles theme, menu, services, order flow, history, admin data -->
+</body>
+</html>
