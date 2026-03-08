@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BYSO | Growth Starts With One Message</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="dark">
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <nav id="sidebar" class="sidebar glass">
+        <button id="close-menu" class="icon-btn">✕</button>
+        <ul class="nav-links">
+            <li><a href="#home" onclick="toggleMenu()">Home</a></li>
+            <li><a href="#services-section" onclick="toggleMenu()">Services</a></li>
+            <li><a href="#history-section" onclick="toggleMenu()">Order History</a></li>
+            <li><a href="terms.html">Terms & Conditions</a></li>
+            <li><a href="admin.html">Admin Panel</a></li>
+        </ul>
+    </nav>
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+    <header class="header glass">
+        <div class="header-left">
+            <button id="hamburger" class="icon-btn" onclick="toggleMenu()">☰</button>
+            <h1 class="logo">BYSO</h1>
+        </div>
+        <button id="theme-toggle" class="icon-btn" onclick="toggleTheme()">☀️</button>
+    </header>
+
+    <main>
+        <section id="home" class="hero fade-in">
+            <h1 class="hero-title">Growth Starts With<br><span>One Message</span></h1>
+            <p class="hero-subtitle">Order powerful digital services instantly through WhatsApp in just a few clicks.</p>
+            <a href="#services-section" class="cta-btn float-anim">Explore Services</a>
+            
+            <div class="stats-container">
+                <div class="stat-box glass">
+                    <h3>10K+</h3>
+                    <p>Orders Completed</p>
+                </div>
+                <div class="stat-box glass">
+                    <h3>5K+</h3>
+                    <p>Happy Clients</p>
+                </div>
+                <div class="stat-box glass">
+                    <h3>50+</h3>
+                    <p>Services</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="services-section" class="fade-in">
+            <h2 class="section-title">Our Services</h2>
+            <div id="services-container" class="services-wrapper">
+                </div>
+        </section>
+
+        <section id="history-section" class="fade-in" style="display: none;">
+            <h2 class="section-title">Order History</h2>
+            <div id="history-container" class="history-grid">
+                </div>
+        </section>
+    </main>
+
+    <footer class="glass footer">
+        <p>&copy; 2026 BYSO. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="terms.html">Terms</a> | 
+            <a href="#">Contact</a> | 
+            <a href="https://wa.me/6282298431688" target="_blank">WhatsApp</a>
+        </div>
+    </footer>
+
+    <div id="order-modal" class="modal">
+        <div class="modal-content glass">
+            <button class="close-modal" onclick="closeModal()">✕</button>
+            <h2 id="modal-service-name">Service Name</h2>
+            <p id="modal-service-limits" class="limits-text">Min: 0 | Max: 0</p>
+            
+            <div class="input-group">
+                <label>Quantity</label>
+                <input type="number" id="order-qty" placeholder="Enter quantity">
+            </div>
+            
+            <div class="input-group">
+                <label>Public Link</label>
+                <input type="url" id="order-link" placeholder="Enter profile/post link">
+            </div>
+
+            <div id="price-display" class="price-display" style="display:none;">
+                Total: <span id="total-price">₹0.00</span>
+            </div>
+
+            <button id="calculate-btn" class="cta-btn w-100" onclick="validateAndCalculate()">Calculate Price</button>
+            <button id="buy-btn" class="cta-btn w-100 whatsapp-btn" style="display:none;" onclick="processOrder()">Buy via WhatsApp</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast glass">Message</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
