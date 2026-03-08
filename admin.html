@@ -1,0 +1,236 @@
+<!-- admin.html – admin panel with password protection and full management -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BYSO · admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-container { padding: 1.5rem; max-width: 600px; margin: 0 auto; }
+    .hidden { display: none !important; }
+    .admin-card { background: rgba(128,128,128,0.1); backdrop-filter: blur(10px); border-radius: 32px; padding: 1.5rem; margin: 1.5rem 0; }
+    .admin-row { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin: 1rem 0; }
+    button, .button { background: #5f4bb6; border: none; color: white; padding: 0.7rem 1.5rem; border-radius: 40px; font-weight: 600; cursor: pointer; }
+    input, select { padding: 0.7rem 1rem; border-radius: 30px; border: 1px solid #aaa; background: transparent; color: inherit; width: 100%; }
+    .danger { background: #b64b4b; }
+    .service-item { display: flex; justify-content: space-between; align-items: center; margin: 0.5rem 0; background: rgba(0,0,0,0.05); padding: 0.5rem 1rem; border-radius: 60px; }
+  </style>
+</head>
+<body class="light-theme">
+  <header class="app-header"><span style="font-size:1.8rem;">BYSO · admin</span><button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button></header>
+  <main class="admin-container" id="adminMain">
+    <!-- login form -->
+    <div id="loginBox" class="admin-card">
+      <h2>Admin access</h2>
+      <input type="password" id="adminPassInput" placeholder="Enter password" style="margin: 1rem 0;">
+      <button id="loginBtn">Login</button>
+      <p style="margin-top:1rem;">Default: md imran 90191123302 bhai sahab</p>
+    </div>
+    <!-- admin panel (hidden) -->
+    <div id="adminPanel" class="hidden">
+      <div class="admin-card">
+        <h3>➕ Add new service</h3>
+        <select id="catSelect"></select>
+        <input type="text" id="serviceName" placeholder="Service name" />
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <input type="number" id="minQty" placeholder="Min" />
+          <input type="number" id="maxQty" placeholder="Max" />
+          <input type="number" step="0.01" id="pricePer" placeholder="Price/unit" />
+        </div>
+        <input type="text" id="iconClass" placeholder="Icon class (fab fa-instagram)" />
+        <button id="addServiceBtn">Add service</button>
+      </div>
+
+      <div class="admin-card">
+        <h3>📦 Manage services</h3>
+        <div id="serviceList"></div>
+      </div>
+
+      <div class="admin-card">
+        <h3>💰 Price checker</h3>
+        <select id="checkServiceSelect"></select>
+        <input type="number" id="checkQty" placeholder="Quantity" />
+        <p>Total: ₹<span id="checkResult">0.00</span></p>
+        <button id="checkPriceBtn">Calculate</button>
+      </div>
+
+      <div class="admin-card">
+        <h3>🔐 Change admin password</h3>
+        <input type="password" id="newPass" placeholder="new password" />
+        <button id="changePassBtn">Update</button>
+      </div>
+
+      <button id="logoutBtn" class="danger">Logout</button>
+    </div>
+  </main>
+  <script>
+    (function() {
+      const STORAGE_PASS = 'byso_admin_pass';
+      const defaultPass = 'md imran 90191123302 bhai sahab';
+      if (!localStorage.getItem(STORAGE_PASS)) localStorage.setItem(STORAGE_PASS, defaultPass);
+
+      // services from localStorage (same as main)
+      function loadServices() {
+        const stored = localStorage.getItem('byso_services');
+        return stored ? JSON.parse(stored) : [
+          { id: 'i1', category: 'Instagram', name: 'IG Followers', min: 10, max: 10000, price: 0.35, icon: 'fab fa-instagram' },
+          { id: 'i2', category: 'Instagram', name: 'IG Likes', min: 5, max: 5000, price: 0.15, icon: 'fab fa-instagram' },
+          { id: 'y1', category: 'YouTube', name: 'YT Views', min: 100, max: 50000, price: 0.02, icon: 'fab fa-youtube' },
+          { id: 'y2', category: 'YouTube', name: 'YT Subscribers', min: 10, max: 2000, price: 1.2, icon: 'fab fa-youtube' },
+          { id: 't1', category: 'TikTok', name: 'TikTok Followers', min: 20, max: 5000, price: 0.5, icon: 'fab fa-tiktok' },
+          { id: 'tg1', category: 'Telegram', name: 'Telegram Members', min: 20, max: 2000, price: 0.8, icon: 'fab fa-telegram' },
+          { id: 'o1', category: 'Other Services', name: 'Website Clicks', min: 50, max: 5000, price: 0.1, icon: 'fas fa-mouse-pointer' }
+        ];
+      }
+      let services = loadServices();
+
+      function saveServices() {
+        localStorage.setItem('byso_services', JSON.stringify(services));
+      }
+
+      // categories (fixed)
+      const categories = ['Instagram','YouTube','TikTok','Telegram','Other Services'];
+
+      // UI elements
+      const loginBox = document.getElementById('loginBox');
+      const adminPanel = document.getElementById('adminPanel');
+      const loginBtn = document.getElementById('loginBtn');
+      const passInput = document.getElementById('adminPassInput');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      function checkLogin() {
+        if (sessionStorage.getItem('admin_logged') === 'yes') {
+          loginBox.classList.add('hidden');
+          adminPanel.classList.remove('hidden');
+          loadAdminData();
+        } else {
+          loginBox.classList.remove('hidden');
+          adminPanel.classList.add('hidden');
+        }
+      }
+
+      loginBtn.addEventListener('click', () => {
+        const entered = passInput.value;
+        const correct = localStorage.getItem(STORAGE_PASS);
+        if (entered === correct) {
+          sessionStorage.setItem('admin_logged', 'yes');
+          checkLogin();
+        } else { alert('Wrong password'); }
+      });
+
+      logoutBtn.addEventListener('click', () => {
+        sessionStorage.removeItem('admin_logged');
+        checkLogin();
+      });
+
+      // load admin interface (populate selects, service list)
+      function loadAdminData() {
+        const catSelect = document.getElementById('catSelect');
+        catSelect.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('');
+
+        // service list
+        const container = document.getElementById('serviceList');
+        function renderServiceList() {
+          container.innerHTML = services.map(s => `
+            <div class="service-item">
+              <span><i class="${s.icon}"></i> ${s.name} (${s.category}) min=${s.min} max=${s.max} ₹${s.price}</span>
+              <div>
+                <button class="edit-service" data-id="${s.id}"><i class="fas fa-edit"></i></button>
+                <button class="delete-service" data-id="${s.id}"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          `).join('');
+          // attach delete
+          document.querySelectorAll('.delete-service').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const id = e.target.closest('button').dataset.id;
+              services = services.filter(s => s.id !== id);
+              saveServices();
+              renderServiceList();
+              loadCheckServiceSelect();
+            });
+          });
+          // simplistic edit: prompt (for demo)
+          document.querySelectorAll('.edit-service').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const id = e.target.closest('button').dataset.id;
+              const svc = services.find(s => s.id === id);
+              if (!svc) return;
+              const newName = prompt('Edit name', svc.name);
+              if (newName) svc.name = newName;
+              const newMin = prompt('min', svc.min);
+              if (newMin) svc.min = parseInt(newMin);
+              const newMax = prompt('max', svc.max);
+              if (newMax) svc.max = parseInt(newMax);
+              const newPrice = prompt('price per unit', svc.price);
+              if (newPrice) svc.price = parseFloat(newPrice);
+              saveServices();
+              renderServiceList();
+              loadCheckServiceSelect();
+            });
+          });
+        }
+        renderServiceList();
+
+        // price checker service dropdown
+        function loadCheckServiceSelect() {
+          const checkSel = document.getElementById('checkServiceSelect');
+          checkSel.innerHTML = services.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        }
+        loadCheckServiceSelect();
+
+        document.getElementById('checkPriceBtn').addEventListener('click', () => {
+          const selId = document.getElementById('checkServiceSelect').value;
+          const qty = parseFloat(document.getElementById('checkQty').value) || 0;
+          const svc = services.find(s => s.id === selId);
+          if (svc) {
+            document.getElementById('checkResult').innerText = (qty * svc.price).toFixed(2);
+          }
+        });
+
+        // add service
+        document.getElementById('addServiceBtn').addEventListener('click', () => {
+          const cat = document.getElementById('catSelect').value;
+          const name = document.getElementById('serviceName').value.trim();
+          const min = parseInt(document.getElementById('minQty').value);
+          const max = parseInt(document.getElementById('maxQty').value);
+          const price = parseFloat(document.getElementById('pricePer').value);
+          const icon = document.getElementById('iconClass').value.trim() || 'fas fa-star';
+          if (!name || isNaN(min) || isNaN(max) || isNaN(price)) return alert('fill all');
+          const newId = Date.now() + '-' + Math.random().toString(36).substring(2);
+          services.push({ id: newId, category: cat, name, min, max, price, icon });
+          saveServices();
+          renderServiceList();
+          loadCheckServiceSelect();
+          // clear
+          document.getElementById('serviceName').value = '';
+          document.getElementById('minQty').value = '';
+          document.getElementById('maxQty').value = '';
+          document.getElementById('pricePer').value = '';
+        });
+
+        // change password
+        document.getElementById('changePassBtn').addEventListener('click', () => {
+          const newp = document.getElementById('newPass').value;
+          if (newp) { localStorage.setItem(STORAGE_PASS, newp); alert('password updated'); }
+        });
+      }
+
+      checkLogin();
+
+      // theme toggle
+      const toggle = document.getElementById('themeToggle');
+      const body = document.body;
+      if (localStorage.getItem('byso_theme')==='dark') { body.classList.replace('light-theme','dark-theme'); toggle.innerHTML='<i class="fas fa-sun"></i>'; }
+      toggle.addEventListener('click',()=>{
+        body.classList.toggle('light-theme'); body.classList.toggle('dark-theme');
+        const isDark=body.classList.contains('dark-theme');
+        toggle.innerHTML=isDark?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
+        localStorage.setItem('byso_theme',isDark?'dark':'light');
+      });
+    })();
+  </script>
+</body>
+</html>

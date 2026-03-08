@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>BYSO · premium digital services</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-theme">
+
+  <!-- mobile left hamburger menu -->
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <div class="menu-panel" id="menuPanel">
+    <div class="menu-header">
+      <span class="menu-close" id="menuClose"><i class="fas fa-times"></i></span>
+    </div>
+    <ul class="menu-items">
+      <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="#services" id="menuServices"><i class="fas fa-th-large"></i> Services</a></li>
+      <li><a href="terms.html"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+      <li><a href="#" id="menuOrderHistory"><i class="fas fa-history"></i> Order History</a></li>
+    </ul>
+    <div class="menu-footer">
+      <a href="terms.html">Terms</a> · <a href="#">Contact</a> · <a href="https://wa.me/6282298431688" target="_blank">WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- fixed header -->
+  <header class="app-header">
+    <div class="header-left">
+      <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+    </div>
+    <div class="header-logo">BYSO</div>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+    </div>
+  </header>
+
+  <!-- main content -->
+  <main id="main">
+    <!-- hero section -->
+    <section class="hero">
+      <div class="floating-elements">
+        <div class="floating-shape shape1"></div>
+        <div class="floating-shape shape2"></div>
+        <div class="floating-shape shape3"></div>
+      </div>
+      <h1 class="hero-title">BYSO</h1>
+      <p class="hero-tagline">Growth Starts With One Message</p>
+      <p class="hero-description">Order powerful digital services instantly through WhatsApp in just a few clicks.</p>
+      <a href="#services" class="cta-button explore-btn">Explore Services <i class="fas fa-arrow-down"></i></a>
+      <div class="stats-row">
+        <div class="stat-item"><span class="stat-num">10K+</span> Orders Completed</div>
+        <div class="stat-item"><span class="stat-num">5K+</span> Happy Clients</div>
+        <div class="stat-item"><span class="stat-num">50+</span> Services Available</div>
+      </div>
+    </section>
+
+    <!-- services sections (dynamic) -->
+    <section id="services" class="services-container">
+      <!-- filled by js -->
+    </section>
+
+    <!-- order history modal -->
+    <div class="modal" id="historyModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Order History</h3>
+          <span class="modal-close" id="closeHistoryModal"><i class="fas fa-times"></i></span>
+        </div>
+        <div class="modal-body" id="historyList">
+          <!-- js filled -->
+        </div>
+      </div>
+    </div>
+
+    <!-- order flow modal (step by step) -->
+    <div class="modal" id="orderModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="orderServiceName">-</h3>
+          <span class="modal-close" id="closeOrderModal"><i class="fas fa-times"></i></span>
+        </div>
+        <div class="modal-body" id="orderModalBody">
+          <!-- dynamic steps -->
+        </div>
+      </div>
+    </div>
+
+    <!-- toast for messages -->
+    <div class="toast" id="toastMsg">Message</div>
+  </main>
+
+  <footer class="app-footer">
+    <a href="terms.html">Terms</a> · <a href="#">Contact</a> · <a href="https://wa.me/6282298431688" target="_blank">WhatsApp</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
